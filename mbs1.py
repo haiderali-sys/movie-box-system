@@ -22,8 +22,13 @@ def  book_ticket():
             if  user_inp_id == mv.movie_id:
                 found=True
                 print(f"Name:{mv.name }\nTiming:{mv.timing}\nAvaiable seats:{mv.available_seats}")
-                if mv.available_seats>0:
-                    mv.available_seats=mv.available_seats-1
+                if mv.available_seats > 0:
+                    mv.available_seats -= 1
+                    bookings.append({"movie": mv.name, "timing": mv.timing})
+                    print("🎟️ Ticket booked successfully!")
+                    return   # go back to menu instead of end()
+
+
                     return end()
                 else:
                     print("Sorry no seats Availabale for this movie")
@@ -33,9 +38,35 @@ def  book_ticket():
        
 
 def cancel_ticket():
-    pass
+   
+    for mv in show_movies:
+        print(f"Movie:{mv.name}\n Timing:{mv.timing}\n Available seats:{mv.available_seats}")
+    
+    while True:
+        user_inp_id = int(input("Enter movie Id to cancel (or 5 to quit): "))
+
+        if user_inp_id == 5:
+            return end()
+
+        # search for movie by id
+        for mv in show_movies:
+            if user_inp_id == mv.movie_id:
+                mv.available_seats += 1   # add seat back
+                print(f"Ticket cancelled for {mv.name}. Seats updated: {mv.available_seats}")
+                return  # exit after success
+
+        print("Invalid Movie Id, try again.")
+bookings = []   # global list to keep track of user bookings
+
 def view_bookings():
-    pass
+    if not bookings:
+        print("No bookings yet.")
+        return
+    
+    print("\nYour Bookings:")
+    for i, b in enumerate(bookings, 1):
+        print(f"{i}. {b['movie']} at {b['timing']}")
+
 def end():
     print("thank you for using our project")
     exit()
